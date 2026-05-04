@@ -1,7 +1,0 @@
-Flask
-Flask-SQLAlchemy
-bcrypt
-pydub
-gunicorn
-requests
-cryptography
