@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Assistant', sans-serif; }
+        .card { background: #1e293b; border: 1px solid #334155; border-radius: 15px; }
+        .card:hover { transform: translateY(-5px); border-color: #38bdf8; transition: 0.3s; }
+        .btn-wa { background: #10b981; color: white; border-radius: 25px; font-weight: bold; }
+        .btn-prime { background: #38bdf8; color: #0f172a; font-weight: 800; border-radius: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-bold">DA <span style="color:#38bdf8">prime studios</span></h1>
+            <a href="https://wa.me/{{settings.whatsapp}}?text=שלום, אני מעוניין בבקשת פלייבקים ובירור כללי..." class="btn btn-prime btn-lg px-5 mt-3 shadow-lg">בקשת פלייבקים ובירור כללי</a>
+        </div>
+
+        <div class="row mb-4 g-2">
+            <div class="col-md-8"><input type="text" id="search" class="form-control" placeholder="חפש פלייבק לפי שם..."></div>
+            <div class="col-md-4">
+                <select id="genre" class="form-select">
+                    <option value="">כל הסגנונות</option>
+                    {% for g in genres %}<option value="{{g}}">{{g}}</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row" id="track-list">
+            {% for t in tracks %}
+            <div class="col-md-4 mb-4 track-item" data-title="{{t.title}}" data-genre="{{t.genre}}">
+                <div class="card h-100 p-3">
+                    <img src="{{url_for('static', filename='uploads/'+t.image_path)}}" class="card-img-top rounded mb-3" height="220" style="object-fit:cover">
+                    <h5 class="text-info">{{t.title}}</h5>
+                    <p class="small text-secondary">{{t.genre}} | <strong>{{t.price}} ₪</strong></p>
+                    <audio controls class="w-100 mb-3"><source src="{{url_for('static', filename='uploads/'+t.audio_path)}}"></audio>
+                    <a href="https://wa.me/{{settings.whatsapp}}?text=שלום, אני מעוניין לרכוש את הפלייבק: {{t.title}}" class="btn btn-wa w-100">רכישה בווצאפ</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        const search = document.getElementById('search');
+        const genre = document.getElementById('genre');
+        const items = document.querySelectorAll('.track-item');
+        function filter() {
+            items.forEach(item => {
+                const matchSearch = item.dataset.title.toLowerCase().includes(search.value.toLowerCase());
+                const matchGenre = !genre.value || item.dataset.genre === genre.value;
+                item.style.display = matchSearch && matchGenre ? 'block' : 'none';
+            });
+        }
+        search.oninput = filter; genre.onchange = filter;
+    </script>
+</body>
+</html>
